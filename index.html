@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(45deg, #000000, rgb(5, 5, 5));
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .top-bar {
+            background: rgba(10, 10, 10, 0.9);
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .top-bar p {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 100px;
+            color: white; 
+            margin: 0;
+        }
+        .frame {
+            background: rgba(20, 20, 20, 0.9);
+            width: 90%;
+            height: 80%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 5px solid white;
+            border-radius: 15px;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: left;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.3);
+            padding: 20px;
+        }
+        .frame-section {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .frame-header {
+            font-size: 50px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .input-box {
+            width: 300px;
+            padding: 10px;
+            font-size: 20px;
+            border: 2px solid white;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            outline: none;
+            text-align: center;
+        }
+        .input-box::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <p>Canadian Dollars (CAD) to Robux (RBX)</p>
+    </div>
+    <div class="frame">
+        <!-- CAD Section -->
+        <div class="frame-section">
+            <div class="frame-header">CAD Amount</div>
+            <input type="text" id="cad-input" class="input-box" placeholder="CAD Amount here">
+        </div>
+        <!-- Robux Section -->
+        <div class="frame-section">
+            <div class="frame-header">Robux Amount</div>
+            <input type="text" id="robux-input" class="input-box" placeholder="Robux Amount" readonly>
+        </div>
+    </div>
+
+    <script>
+        const cadInput = document.getElementById("cad-input");
+        const robuxInput = document.getElementById("robux-input");
+        const exchangeRate = 59; // 1 CAD = 59 Robux
+
+        function formatNumber(value) {
+            let numericValue = value.replace(/[^0-9]/g, "");
+            return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function updateRobux() {
+            let cadValue = cadInput.value.replace(/[^0-9]/g, ""); // Get numeric CAD value
+            if (cadValue === "") {
+                robuxInput.value = ""; // Clear Robux if empty
+                return;
+            }
+            let robuxValue = (parseInt(cadValue) * exchangeRate).toLocaleString();
+            robuxInput.value = robuxValue + " Robux"; // Show converted value
+        }
+
+        cadInput.addEventListener("input", function () {
+            if (!cadInput.value.startsWith("C$")) {
+                cadInput.value = "$" + cadInput.value.replace(/C\$/g, "");
+            }
+
+            let formattedValue = formatNumber(cadInput.value.slice(2)); // Remove "C$" before formatting
+            cadInput.value = "$" + formattedValue;
+
+            updateRobux(); // Update Robux conversion
+        });
+
+        cadInput.addEventListener("focus", function () {
+            if (cadInput.value === "") {
+                cadInput.value = "$";
+            }
+        });
+    </script>
+</body>
+</html>
